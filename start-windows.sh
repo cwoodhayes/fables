@@ -14,7 +14,7 @@ OPTS="$OPTS -device vfio-pci,host=01:00.1"
 OPTS="$OPTS -drive if=pflash,format=raw,readonly,file=/usr/share/edk2.git/ovmf-x64/OVMF_CODE-pure-efi.fd"
 OPTS="$OPTS -drive if=pflash,format=raw,file=$(pwd)/OVMF_VARS-pure-efi.fd"
 # Load our created VM image as a harddrive.
-OPTS="$OPTS -hda $(pwd)/windows.img"
+OPTS="$OPTS -drive file=$(pwd)/windows.img,format=raw,index=0,media=disk"
 # Load our OS setup image e.g. ISO file.
 # uncomment if we need to reinstall windows
 # OPTS="$OPTS -cdrom $(pwd)/Win10_1803_English_x64.iso"
@@ -24,5 +24,5 @@ OPTS="$OPTS -vga qxl"
 OPTS="$OPTS -monitor stdio"
 #add cmdline args to the end of the cmd string
 OPTS="$OPTS $@"
-echo $OPTS
+
 sudo kvm $OPTS 
