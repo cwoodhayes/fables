@@ -1,15 +1,38 @@
-#parse program args
+### parse program args ###
+#defaults
 CMDLINE_OPTS=""
+PERFORMANCE=2 #choose from 1, 2, or 3, with 3 being the highest VM performance
+#parse
 while [ "$1" != "" ]; do
     case $1 in
         -a | --scarlett-audio ) PASS_SCARLETT=1 		#pass the Scarlett 2i4 through to the VM
                                 ;;
         -s | --synergy )    	SYNERGY=1				#pass the keyboard and mouse to the vm
                                 ;;
+        -p | --performance )    shift
+                                PERFORMANCE="$1"
+                                ;;
         * )						CMDLINE_OPTS="$CMDLINE_OPTS $1"
     esac
     shift
 done
+case $PERFORMANCE in
+    1)
+        CORES=4
+        RAM=6G
+        ;;
+    2)
+        CORES=4
+        RAM=10G
+        ;;
+    3)
+        CORES=6
+        RAM=12G
+        ;;
+    *)
+        echo "[start-windows]: Invalid performance value \"$PERFORMANCE\"."
+        exit 1;
+esac
 
 #### MAIN #####
 
@@ -21,11 +44,11 @@ GUEST_ID="fox"
 OPTS=""
 # Basic CPU settings.
 OPTS="$OPTS -cpu host,kvm=off"
-OPTS="$OPTS -smp 8,sockets=1,cores=4,threads=2"
+OPTS="$OPTS -smp sockets=1,cores=$CORES,threads=2"
 # Enable KVM full virtualization support.
 OPTS="$OPTS -enable-kvm"
 # Assign memory to the vm.
-OPTS="$OPTS -m 8G"
+OPTS="$OPTS -m $RAM"
 # VFIO GPU and GPU sound passthrough.
 OPTS="$OPTS -device vfio-pci,host=01:00.0,multifunction=on"
 OPTS="$OPTS -device vfio-pci,host=01:00.1"
@@ -70,4 +93,5 @@ OPTS="$OPTS -netdev user,id=$GUEST_ID,hostname=$GUEST_NET_NAME,hostfwd=tcp::2480
 OPTS="$OPTS -net nic,netdev=$GUEST_ID"
 
 #run kvm with all options
+# echo "sudo $VM_SOUND kvm $OPTS $CMDLINE_OPTS"
 sudo $VM_SOUND kvm $OPTS $CMDLINE_OPTS
