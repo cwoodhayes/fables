@@ -23,8 +23,8 @@ OPTS="$OPTS -drive file=$(pwd)/windows.img,format=raw,index=0,media=disk"
 # uncomment if we need to reinstall windows
 # OPTS="$OPTS -cdrom $(pwd)/Win10_1803_English_x64.iso"
 # Use the following emulated video device (use none for disabled).
-# OPTS="$OPTS -vga qxl"
-OPTS="$OPTS -vga none -device qxl" 	#uncomment the above to have a vga window in this monitor
+# OPTS="$OPTS -vga qxl"	#enable this to get a VGA window in the ubuntu monitor. 
+OPTS="$OPTS -vga none -device qxl" 	#enable this for a separate windows display from the GTX1060
 # Redirect QEMU's console input and output.
 OPTS="$OPTS -monitor stdio"
 
@@ -38,8 +38,8 @@ VM_SOUND="$VM_SOUND QEMU_ALSA_DAC_BUFFER_SIZE=512"
 VM_SOUND="$VM_SOUND QEMU_ALSA_DAC_PERIOD_SIZE=170"
 #forward USB devices
 OPTS="$OPTS -device qemu-xhci"
-# OPTS="$OPTS -device usb-host,vendorid=0x062a,productid=0x4102"	#mouse
-# OPTS="$OPTS -device usb-host,vendorid=0x413c,productid=0x2111"	#keyboard
+OPTS="$OPTS -device usb-host,vendorid=0x062a,productid=0x4102"	#mouse
+OPTS="$OPTS -device usb-host,vendorid=0x413c,productid=0x2111"	#keyboard
 OPTS="$OPTS -device usb-host,vendorid=0x1235,productid=0x800a"	#scarlett 2i4
 
 #### NETWORK SETUP #########
@@ -52,3 +52,5 @@ OPTS="$OPTS -net nic,netdev=$GUEST_ID"
 OPTS="$OPTS $@"
 
 sudo $VM_SOUND kvm $OPTS 
+
+#use xrandr to mirror or disable the left display (where windows is going)?
