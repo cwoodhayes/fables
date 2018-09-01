@@ -1,3 +1,18 @@
+#parse program args
+CMDLINE_OPTS=""
+while [ "$1" != "" ]; do
+    case $1 in
+        -a | --scarlett-audio ) PASS_SCARLETT=1 		#pass the Scarlett 2i4 through to the VM
+                                ;;
+        -s | --synergy )    	SYNERGY=1				#pass the keyboard and mouse to the vm
+                                ;;
+        * )						CMDLINE_OPTS="$CMDLINE_OPTS $1"
+    esac
+    shift
+done
+
+#### MAIN #####
+
 #network identifiers
 GUEST_NET_NAME="sly-fox"
 GUEST_ID="fox"
@@ -38,9 +53,15 @@ VM_SOUND="$VM_SOUND QEMU_ALSA_DAC_BUFFER_SIZE=512"
 VM_SOUND="$VM_SOUND QEMU_ALSA_DAC_PERIOD_SIZE=170"
 #forward USB devices
 OPTS="$OPTS -device qemu-xhci"
-OPTS="$OPTS -device usb-host,vendorid=0x062a,productid=0x4102"	#mouse
-OPTS="$OPTS -device usb-host,vendorid=0x413c,productid=0x2111"	#keyboard
-OPTS="$OPTS -device usb-host,vendorid=0x1235,productid=0x800a"	#scarlett 2i4
+if [ "$SYNERGY" = "1" ]; then
+	#pass through the host mouse and keyboard 
+	OPTS="$OPTS -device usb-host,vendorid=0x062a,productid=0x4102"	#mouse
+	OPTS="$OPTS -device usb-host,vendorid=0x413c,productid=0x2111"	#keyboard
+	#TODO: use xrandr to mirror or disable the left display (where windows is going)?
+fi
+if [ "$PASS_SCARLETT" = "1" ]; then
+	OPTS="$OPTS -device usb-host,vendorid=0x1235,productid=0x800a"	#scarlett 2i4
+fi
 
 #### NETWORK SETUP #########
 #set up net id and name
@@ -48,9 +69,5 @@ OPTS="$OPTS -device usb-host,vendorid=0x1235,productid=0x800a"	#scarlett 2i4
 OPTS="$OPTS -netdev user,id=$GUEST_ID,hostname=$GUEST_NET_NAME,hostfwd=tcp::24800-:24800"
 OPTS="$OPTS -net nic,netdev=$GUEST_ID"
 
-#add cmdline args to the end of the cmd string
-OPTS="$OPTS $@"
-
-sudo $VM_SOUND kvm $OPTS 
-
-#use xrandr to mirror or disable the left display (where windows is going)?
+#run kvm with all options
+sudo $VM_SOUND kvm $OPTS $CMDLINE_OPTS
