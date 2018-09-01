@@ -36,7 +36,11 @@ VM_SOUND=""
 VM_SOUND="$VM_SOUND QEMU_AUDIO_DRV=alsa"
 VM_SOUND="$VM_SOUND QEMU_ALSA_DAC_BUFFER_SIZE=512"
 VM_SOUND="$VM_SOUND QEMU_ALSA_DAC_PERIOD_SIZE=170"
-#forward mouse and keyboard
+#forward USB devices
+OPTS="$OPTS -device qemu-xhci"
+# OPTS="$OPTS -device usb-host,vendorid=0x062a,productid=0x4102"	#mouse
+# OPTS="$OPTS -device usb-host,vendorid=0x413c,productid=0x2111"	#keyboard
+OPTS="$OPTS -device usb-host,vendorid=0x1235,productid=0x800a"	#scarlett 2i4
 
 #### NETWORK SETUP #########
 #set up net id and name
