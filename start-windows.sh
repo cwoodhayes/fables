@@ -78,7 +78,7 @@ VM_SOUND="$VM_SOUND QEMU_ALSA_DAC_PERIOD_SIZE=170"
 OPTS="$OPTS -device qemu-xhci"
 if [ "$SYNERGY" = "1" ]; then
 	#pass through the host mouse and keyboard 
-	OPTS="$OPTS -device usb-host,vendorid=0x062a,productid=0x4102"	#mouse
+	OPTS="$OPTS -device usb-host,vendorid=0x1d57,productid=0xffa8"	#mouse
 	OPTS="$OPTS -device usb-host,vendorid=0x413c,productid=0x2111"	#keyboard
 	#TODO: use xrandr to mirror or disable the left display (where windows is going)?
 fi
