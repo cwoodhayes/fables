@@ -80,7 +80,6 @@ if [ "$SYNERGY" = "1" ]; then
 	#pass through the host mouse and keyboard 
 	OPTS="$OPTS -device usb-host,vendorid=0x1d57,productid=0xffa8"	#mouse
 	OPTS="$OPTS -device usb-host,vendorid=0x413c,productid=0x2111"	#keyboard
-	#TODO: use xrandr to mirror or disable the left display (where windows is going)?
 fi
 if [ "$PASS_SCARLETT" = "1" ]; then
 	OPTS="$OPTS -device usb-host,vendorid=0x1235,productid=0x800a"	#scarlett 2i4
@@ -88,11 +87,9 @@ fi
 
 #### NETWORK SETUP #########
 #set up net id and name
-#synergy port forward
+#synergy port forward + windows RDI forward
 OPTS="$OPTS -netdev user,id=$GUEST_ID,hostname=$GUEST_NET_NAME,hostfwd=tcp::24800-:24800,hostfwd=tcp::3390-:3390"
 OPTS="$OPTS -net nic,netdev=$GUEST_ID"
-#windows RDP (remote desktop) forward
-
 
 #run kvm with all options
 # echo "sudo $VM_SOUND kvm $OPTS $CMDLINE_OPTS"
