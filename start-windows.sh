@@ -89,8 +89,10 @@ fi
 #### NETWORK SETUP #########
 #set up net id and name
 #synergy port forward
-OPTS="$OPTS -netdev user,id=$GUEST_ID,hostname=$GUEST_NET_NAME,hostfwd=tcp::24800-:24800"
+OPTS="$OPTS -netdev user,id=$GUEST_ID,hostname=$GUEST_NET_NAME,hostfwd=tcp::24800-:24800,hostfwd=tcp::3390-:3390"
 OPTS="$OPTS -net nic,netdev=$GUEST_ID"
+#windows RDP (remote desktop) forward
+
 
 #run kvm with all options
 # echo "sudo $VM_SOUND kvm $OPTS $CMDLINE_OPTS"
