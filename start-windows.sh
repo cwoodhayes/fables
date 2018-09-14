@@ -1,3 +1,4 @@
+#!/bin/bash
 ### parse program args ###
 #defaults
 CMDLINE_OPTS=""
@@ -40,7 +41,6 @@ esac
 GUEST_NET_NAME="sly-fox"
 GUEST_ID="fox"
 
-#!/bin/bash
 OPTS=""
 # Basic CPU settings.
 OPTS="$OPTS -cpu host,kvm=off"
